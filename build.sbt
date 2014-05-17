@@ -1,4 +1,4 @@
-name := """play-java-preview"""
+name := """course-manager"""
 
 version := "1.0-SNAPSHOT"
 
