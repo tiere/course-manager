@@ -1,0 +1,7 @@
+- !!models.Course
+  name: Programming Basics
+  points: 6
+
+- !!models.Course
+  name: Advanced Databases
+  points: 12
