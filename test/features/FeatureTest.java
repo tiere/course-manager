@@ -5,16 +5,19 @@ import static org.fest.assertions.Assertions.*;
 import static play.test.Helpers.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import models.Course;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import play.libs.Json;
 import play.libs.ws.WS;
 import play.test.WithServer;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class FeatureTest extends WithServer {
 
@@ -100,4 +103,47 @@ public class FeatureTest extends WithServer {
 				.containsIgnoringCase(deleteErrorMessage(id));
 	}
 
+	@Test
+	public void testAddingNewCourseWorks() {
+		ObjectNode newCourse = Json.newObject();
+		newCourse.put("name", "Figuring out Web Servers");
+		newCourse.put("points", 6);
+
+		ObjectNode request = Json.newObject();
+		request.put("course", newCourse);
+
+		JsonNode response = WS.url(String.format("%s/courses", host))
+				.post(request).get(timeout).asJson();
+
+		List<Course> courses = Course.find.where()
+				.eq("name", "Figuring out Web Servers").findList();
+		assertThat(courses.size()).isGreaterThan(0);
+		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
+				success);
+		assertThat(response.findPath(message).textValue())
+				.containsIgnoringCase(courseAddedSuccessMessage);
+	}
+
+	@Test
+	public void testTryingToAddCourseWithTooLongNameIsHandled() {
+		String tooLongName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+		ObjectNode newCourse = Json.newObject();
+		newCourse.put("name", tooLongName);
+		newCourse.put("points", 6);
+
+		ObjectNode request = Json.newObject();
+		request.put("course", newCourse);
+
+		JsonNode response = WS.url(String.format("%s/courses", host))
+				.post(request).get(timeout).asJson();
+
+		List<Course> courses = Course.find.where().eq("name", tooLongName)
+				.findList();
+
+		assertThat(courses.size()).isEqualTo(0);
+		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
+				fail);
+		assertThat(response.findPath(message).get(0).textValue())
+				.containsIgnoringCase(courseNameTooLongMessage);
+	}
 }

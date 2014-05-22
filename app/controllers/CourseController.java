@@ -2,10 +2,15 @@ package controllers;
 
 import static helpers.HelperMethodsAndVariables.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
 
 import models.Course;
 import play.libs.Json;
+import play.data.validation.*;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -31,26 +36,26 @@ public class CourseController extends Controller {
 		response = Json.newObject();
 
 		String name = json.findPath("name").textValue();
-		String points = json.findPath("points").textValue();
+		int points = json.findPath("points").asInt();
 
-		if (name == null || points == null) {
-			response.put("status", "fail");
-			response.put("message", "name and points are required");
+		models.Course course = new models.Course(name, points);
+
+		Set<ConstraintViolation<Course>> errors = Validation.getValidator()
+				.validate(course);
+
+		if (errors.size() > 0) {
+			response.put(status, fail);
+			List<String> errorMessages = new ArrayList<String>();
+			for (ConstraintViolation<Course> constraintViolation : errors) {
+				errorMessages.add(constraintViolation.getMessage());
+			}
+			response.put(message, Json.toJson(errorMessages));
 			return badRequest(response);
 		}
 
-		int pointsInt;
-		try {
-			pointsInt = Integer.parseInt(points);
-		} catch (NumberFormatException e) {
-			response.put("status", "fail");
-			response.put("message", "points need to be in number format");
-			return badRequest(response);
-		}
-
-		models.Course course = new models.Course(name, pointsInt);
 		Ebean.save(course);
-		response.put("message", "Course added successfully");
+		response.put(status, success);
+		response.put("message", courseAddedSuccessMessage);
 		return ok(response);
 	}
 

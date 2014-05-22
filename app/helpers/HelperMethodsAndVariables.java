@@ -16,6 +16,9 @@ public class HelperMethodsAndVariables {
 	public static String fail = "fail";
 	public static String status = "status";
 	public static String message = "message";
+	public static String invalidCourseInformationMessage = "name and points are required and points must be greater than 0 and in number format";
+	public static String courseAddedSuccessMessage = "Course added successfully";
+	public static final String courseNameTooLongMessage = "Error, max length for name is 30 characters";
 
 	public static String deleteSuccessMessage(Long id) {
 		return String
