@@ -1,9 +1,10 @@
 package features;
-import static org.fest.assertions.Assertions.assertThat;
-import static play.test.Helpers.fakeApplication;
+
+import static helpers.HelperMethodsAndVariables.*;
+import static org.fest.assertions.Assertions.*;
+import static play.test.Helpers.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import models.Course;
 
@@ -16,9 +17,6 @@ import play.test.WithServer;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class FeatureTest extends WithServer {
-	int timeout;
-	Course testCourse;
-	List<Course> testCourses;
 
 	@Before
 	public void setUp() throws Exception {
@@ -52,4 +50,54 @@ public class FeatureTest extends WithServer {
 			assertThat(found);
 		}
 	}
+
+	@Test
+	public void testShowingOneCourseWorks() {
+		for (Course course : testCourses) {
+			JsonNode response = WS
+					.url(String.format("%s/courses/%s", host, course.id)).get()
+					.get(timeout).asJson();
+
+			assertThat(course.name).isEqualTo(
+					response.findPath("name").textValue());
+		}
+	}
+
+	@Test
+	public void testCourseNotFoundIsHandledProperly() {
+		JsonNode response = WS.url("http://localhost:3333/courses/1234").get()
+				.get(timeout).asJson();
+
+		assertThat("not found").isEqualTo(
+				response.findPath("status").textValue());
+		assertThat(response.findPath("message").textValue()).contains("1234");
+	}
+
+	@Test
+	public void testRemovingCourseWorks() {
+		for (Course course : testCourses) {
+			JsonNode response = WS
+					.url(String.format("%s/courses/%s", host, course.id))
+					.delete().get(timeout).asJson();
+
+			assertThat(Course.find.byId(course.id)).isNull();
+			assertThat(response.findPath(status).textValue())
+					.containsIgnoringCase(success);
+			assertThat(response.findPath(message).textValue())
+					.containsIgnoringCase(deleteSuccessMessage(course.id));
+		}
+	}
+
+	@Test
+	public void testTryingToDeleteNonExistingRecordIsHandled() {
+		long id = 1337;
+		JsonNode response = WS.url(String.format("%s/courses/%s", host, id))
+				.delete().get(timeout).asJson();
+
+		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
+				fail);
+		assertThat(response.findPath(message).textValue())
+				.containsIgnoringCase(deleteErrorMessage(id));
+	}
+
 }

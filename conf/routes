@@ -10,3 +10,6 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 GET		/courses					controllers.CourseController.courses()
 POST	/courses					controllers.CourseController.addCourse()
+
+GET		/courses/:id				controllers.CourseController.show(id: Long)
+DELETE	/courses/:id				controllers.CourseController.delete(id: Long)

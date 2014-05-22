@@ -12,13 +12,65 @@
     <script src="assets/modernizr/modernizr.js"></script>
 </head>
 <body>
-<script type="text/x-handlebars">
+<script type="text/x-handlebars" data-template-name="application">
+    <nav class="top-bar" data-topbar>
+        <ul class="title-area">
+            <li class="name">
+                <h1>{{#link-to 'index'}}Course Manager{{/link-to}}</h1>
+            </li>
+            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+
+        <section class="top-bar-section">
+            <ul class="right">
+                <li>{{#link-to 'index'}}Home{{/link-to}}</li>
+                <li>{{#link-to 'courses'}}Courses{{/link-to}}</li>
+            </ul>
+        </section>
+    </nav>
+    <main>
+        <div class="row">
+            <div class="small-12 columns">
+                {{ outlet }}
+            </div>
+        </div>
+    </main>
 
 </script>
+
+<script type="text/x-handlebars" data-template-name="index">
+    <h1>Welcome to Course Manager</h1>
+</script>
+
+<script type="text/x-handlebars" data-template-name="courses">
+    <div class="small-6 columns">
+        <h1>Listing Courses</h1>
+        <ul>
+            {{#each}}
+                <li>{{#link-to 'course' this}}Name: {{name}}{{/link-to}}, points: {{points}}</li>
+            {{/each}}
+        </ul>
+    </div>
+
+    <div class="small-6 columns">
+        {{outlet}}
+    </div>
+</script>
+
+<script type="text/x-handlebars" data-template-name="course">
+    <h2>{{name}}</h2>
+
+    <h3>Points: {{points}}</h3>
+</script>
+
+<script type="text/x-handlebars" data-template-name="courses/index">
+    <p>When you choose a course from the left, the information about that course will be shown here</p>
+</script>
+
 <script src="assets/jquery/dist/jquery.js"></script>
 <script src="assets/handlebars/handlebars.js"></script>
 <script src="assets/ember/ember.js"></script>
-<!--<script src="assets/ember-data/ember-data.js"></script>-->
+<script src="assets/ember-data/ember-data.js"></script>
 <script src="assets/javascripts/app.js"></script>
 </body>
 </html>

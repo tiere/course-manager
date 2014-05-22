@@ -8,7 +8,6 @@ import play.db.ebean.Model;
 
 @Entity
 public class Course extends Model {
-
 	/**
 	 * 
 	 */

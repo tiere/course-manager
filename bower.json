@@ -1,0 +1,25 @@
+{
+  "name": "course-manager",
+  "version": "0.0.0",
+  "authors": [
+    "tiere <tommi.tiere@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ember-data": "~0.0.14",
+    "ember": "~1.5.1",
+    "foundation": "~5.2.2"
+  },
+  "resolutions": {
+    "ember": "~1.5.1"
+  }
+}
