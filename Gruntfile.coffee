@@ -8,21 +8,22 @@ ember = "#{bower_components}/ember/ember.js"
 ember_data = "#{bower_components}/ember-data/ember-data.js"
 
 # CSS
-foundation = "#{bower_components}/foundation/css/foundation.css"
-normalize = "#{bower_components}/foundation/css/normalize.css"
+foundation = "#{bower_components}/foundation/scss"
 
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json'),
+    sass:
+      options:
+        includePaths: [foundation]
+      dist:
+        options:
+          outputStyle: 'compressed'
+        files:
+          'public/stylesheet.css': 'scss/app.scss'
     concat:
       options:
         separator: ';'
-      stylesheet:
-        src: [
-          normalize
-          foundation
-        ],
-        dest: 'public/stylesheet.css'
       application:
         src: [
           jquery
@@ -41,5 +42,6 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
+  grunt.loadNpmTasks 'grunt-sass'
 
-  grunt.registerTask 'default', ['concat', 'uglify']
+  grunt.registerTask 'default', ['sass', 'concat', 'uglify']
