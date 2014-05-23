@@ -13,6 +13,7 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+/*.log
 
 # Bower and grunt stuff
 /bower_components
