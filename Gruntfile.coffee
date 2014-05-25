@@ -17,10 +17,12 @@ module.exports = (grunt) ->
       options:
         includePaths: [foundation]
       dist:
-        options:
-          outputStyle: 'compressed'
         files:
           'public/stylesheet.css': 'scss/app.scss'
+    coffee:
+      compile:
+        files:
+          'public/app.js': 'app/assets/**/*.coffee'
     concat:
       options:
         separator: ';'
@@ -39,9 +41,22 @@ module.exports = (grunt) ->
       application:
         src: '<%= concat.application.dest %>',
         dest: 'public/application.min.js'
+    watch:
+      sass:
+        files: 'scss/**/*.scss',
+        tasks: ['sass']
+      coffee:
+        files: 'app/assets/**/*.coffee',
+        tasks: ['coffee']
+    clean:
+      js: ['public/application.js']
 
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-sass'
+  grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-contrib-clean'
 
-  grunt.registerTask 'default', ['sass', 'concat', 'uglify']
+  grunt.registerTask 'build', ['coffee', 'sass', 'concat', 'uglify', 'clean']
+  grunt.registerTask 'default', ['build', 'watch']
