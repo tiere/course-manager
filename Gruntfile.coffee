@@ -48,8 +48,17 @@ module.exports = (grunt) ->
       coffee:
         files: 'app/assets/**/*.coffee',
         tasks: ['coffee']
+      emberTemplates:
+        files: 'handlebars_templates/**/*.hbs',
+        tasks: ['emberTemplates']
     clean:
       js: ['public/application.js']
+    emberTemplates:
+      compile:
+        options:
+          templateBasePath: 'templates'
+        files:
+          'public/templates.js': 'templates/**/*.hbs'
 
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
@@ -57,6 +66,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-clean'
+  grunt.loadNpmTasks 'grunt-ember-templates'
 
-  grunt.registerTask 'build', ['coffee', 'sass', 'concat', 'uglify', 'clean']
+  grunt.registerTask 'build', ['emberTemplates', 'coffee', 'sass', 'concat', 'uglify', 'clean']
   grunt.registerTask 'default', ['build', 'watch']

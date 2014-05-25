@@ -1,0 +1,12 @@
+<div class="small-6 columns">
+    <h1>Listing Courses</h1>
+    <ul>
+        {{#each}}
+            <li>{{#link-to 'course' this}}Name: {{name}}{{/link-to}}, points: {{points}}</li>
+        {{/each}}
+    </ul>
+</div>
+
+<div class="small-6 columns">
+    {{outlet}}
+</div>
