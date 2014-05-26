@@ -36,6 +36,7 @@ public class FeatureTest extends WithServer {
 		}
 	}
 
+	// GET /courses
 	@Test
 	public void testListingAllCoursesWorks() {
 		JsonNode response = WS.url("http://localhost:3333/courses").get()
@@ -54,6 +55,7 @@ public class FeatureTest extends WithServer {
 		}
 	}
 
+	// GET /courses/1
 	@Test
 	public void testShowingOneCourseWorks() {
 		for (Course course : testCourses) {
@@ -76,6 +78,7 @@ public class FeatureTest extends WithServer {
 		assertThat(response.findPath("message").textValue()).contains("1234");
 	}
 
+	// DELETE /courses/1
 	@Test
 	public void testRemovingCourseWorks() {
 		for (Course course : testCourses) {
@@ -103,6 +106,7 @@ public class FeatureTest extends WithServer {
 				.containsIgnoringCase(deleteErrorMessage(id));
 	}
 
+	// POST /courses
 	@Test
 	public void testAddingNewCourseWorks() {
 		ObjectNode newCourse = Json.newObject();
@@ -145,5 +149,58 @@ public class FeatureTest extends WithServer {
 				fail);
 		assertThat(response.findPath(message).get(0).textValue())
 				.containsIgnoringCase(courseNameTooLongMessage);
+	}
+
+	// PUT /courses/1
+	@Test
+	public void testUpdatingCourseWorks() {
+		ObjectNode updatedCourse = Json.newObject();
+		updatedCourse.put("name", "Fun with Java");
+		updatedCourse.put("points", 8);
+
+		JsonNode response = WS
+				.url(String.format("%s/courses/%s", host, testCourses.get(0).id))
+				.put(updatedCourse).get(timeout).asJson();
+
+		assertThat(Course.find.byId(testCourses.get(0).id).name)
+				.isEqualToIgnoringCase("Fun with Java");
+		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
+				success);
+		assertThat(response.findPath(message).textValue())
+				.containsIgnoringCase(courseUpdatedSuccessMessage);
+	}
+
+	@Test
+	public void testUpdatingWithTooHighPointsIsHandled() {
+		ObjectNode updatedCourse = Json.newObject();
+		updatedCourse.put("name", "Fun with Java");
+		updatedCourse.put("points", 31);
+
+		JsonNode response = WS
+				.url(String.format("%s/courses/%s", host, testCourses.get(0).id))
+				.put(updatedCourse).get(timeout).asJson();
+
+		assertThat(Course.find.byId(testCourses.get(0).id).name)
+				.doesNotContain("Fun with Java");
+		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
+				fail);
+		assertThat(response.findPath(message).toString()).containsIgnoringCase(
+				coursePointsTooHighMessage);
+	}
+
+	@Test
+	public void testTryingToUpdateNonExistingCourseIsHandled() {
+		ObjectNode updatedCourse = Json.newObject();
+		updatedCourse.put("name", "Fun with Java");
+		updatedCourse.put("points", 20);
+
+		JsonNode response = WS.url(String.format("%s/courses/%s", host, 1337))
+				.put(updatedCourse).get(timeout).asJson();
+
+		assertThat(Course.find.byId(1337L)).isNull();
+		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
+				fail);
+		assertThat(response.findPath(message).textValue())
+				.containsIgnoringCase(courseUpdateNotFoundMessage(1337L));
 	}
 }

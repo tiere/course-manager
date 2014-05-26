@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolation;
 
 import models.Course;
 import play.libs.Json;
+import play.data.Form;
 import play.data.validation.*;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
@@ -92,5 +93,38 @@ public class CourseController extends Controller {
 			return ok(response);
 		}
 
+	}
+
+	@BodyParser.Of(BodyParser.Json.class)
+	public static Result update(Long id) {
+		response = Json.newObject();
+		Course course = Course.find.byId(id);
+
+		if (course == null) {
+			response.put(status, fail);
+			response.put(message, courseUpdateNotFoundMessage(id));
+			return notFound(response);
+		}
+
+		Form<Course> courseForm = Form.form(Course.class).bindFromRequest(
+				request());
+
+		if (courseForm.hasErrors()) {
+			response.put(status, fail);
+			response.put(message, courseForm.errorsAsJson());
+			return forbidden(response);
+		}
+
+		Course newCourse = courseForm.bindFromRequest(request()).get();
+
+		course.name = newCourse.name;
+		course.points = newCourse.points;
+
+		course.save();
+
+		response.put(status, success);
+		response.put(message, courseUpdatedSuccessMessage);
+
+		return ok(response);
 	}
 }

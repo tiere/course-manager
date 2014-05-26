@@ -13,3 +13,4 @@ POST	/courses					controllers.CourseController.addCourse()
 
 GET		/courses/:id				controllers.CourseController.show(id: Long)
 DELETE	/courses/:id				controllers.CourseController.delete(id: Long)
+PUT		/courses/:id				controllers.CourseController.update(id: Long)
