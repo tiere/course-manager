@@ -1,9 +1,6 @@
 CourseManager = Ember.Application.create
   LOG_TRANSITIONS: true
 
-CourseManager.Store = DS.Store.extend
-  adapter: DS.RESTAdapter
-
 CourseManager.Router.map ->
   @resource 'courses', ->
     @resource('course', path: '/:course_id')
