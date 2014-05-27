@@ -1,22 +1,22 @@
 {
-    "name": "course-manager",
-    "version": "0.0.1",
-    "authors": [
-        "tiere"
-    ],
-    "license": "MIT",
-    "private": true,
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "public",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "ember": "~1.5.1",
-        "foundation": "~5.2.2",
-        "ember-data": "1.0.0-beta.7"
-    }
+  "name": "course-manager",
+  "version": "0.0.1",
+  "authors": [
+    "tiere"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ember": "~1.5.1",
+    "foundation": "~5.2.2",
+    "ember-data": "1.0.0-beta.7"
+  }
 }

@@ -18,6 +18,7 @@ import play.mvc.Result;
 
 import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class CourseController extends Controller {
 
@@ -33,30 +34,22 @@ public class CourseController extends Controller {
 
 	@BodyParser.Of(BodyParser.Json.class)
 	public static Result addCourse() {
-		JsonNode json = request().body().asJson();
 		response = Json.newObject();
 
-		String name = json.findPath("name").textValue();
-		int points = json.findPath("points").asInt();
+		Form<Course> courseForm = Form.form(Course.class).bind(
+				request().body().asJson().findPath("course"));
 
-		models.Course course = new models.Course(name, points);
-
-		Set<ConstraintViolation<Course>> errors = Validation.getValidator()
-				.validate(course);
-
-		if (errors.size() > 0) {
-			response.put(status, fail);
-			List<String> errorMessages = new ArrayList<String>();
-			for (ConstraintViolation<Course> constraintViolation : errors) {
-				errorMessages.add(constraintViolation.getMessage());
-			}
-			response.put(message, Json.toJson(errorMessages));
-			return badRequest(response);
+		if (courseForm.hasErrors()) {
+			response.put("errors", courseForm.errorsAsJson());
+			return status(422, response);
 		}
-
-		Ebean.save(course);
-		response.put(status, success);
-		response.put("message", courseAddedSuccessMessage);
+		Course course = courseForm.bind(
+				request().body().asJson().findPath("course")).get();
+		course.save();
+		ObjectNode responseCourse = Json.newObject();
+		responseCourse.put("name", course.name);
+		responseCourse.put("points", course.points);
+		response.put("course", responseCourse);
 		return ok(response);
 	}
 

@@ -6,6 +6,8 @@ handlebars = "#{bower_components}/handlebars/handlebars.js"
 jquery = "#{bower_components}/jquery/dist/jquery.js"
 ember = "#{bower_components}/ember/ember.js"
 ember_data = "#{bower_components}/ember-data/ember-data.js"
+fastclick = "#{bower_components}/fastclick/lib/fastclick.js"
+foundation_js = "#{bower_components}/foundation/js/foundation.js"
 
 # CSS
 foundation = "#{bower_components}/foundation/scss"
@@ -29,6 +31,8 @@ module.exports = (grunt) ->
       application:
         src: [
           jquery
+          fastclick
+          foundation_js
           handlebars
           ember
           ember_data
@@ -49,7 +53,7 @@ module.exports = (grunt) ->
         files: 'app/assets/**/*.coffee',
         tasks: ['coffee']
       emberTemplates:
-        files: 'handlebars_templates/**/*.hbs',
+        files: 'templates/**/*.hbs',
         tasks: ['emberTemplates']
     clean:
       js: ['public/application.js']

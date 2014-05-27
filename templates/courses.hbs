@@ -1,10 +1,17 @@
 <div class="small-6 columns">
-    <h1>Listing Courses</h1>
-    <ul>
+    <h1>Courses</h1>
+    <ul class="no-bullet">
         {{#each}}
-            <li>{{#link-to 'course' this}}Name: {{name}}{{/link-to}}, points: {{points}}</li>
+            <li>{{#link-to 'course' this}}{{name}}{{/link-to}}, points: {{points}}</li>
         {{/each}}
     </ul>
+
+    <fieldset>
+        <legend>Add a new Course</legend>
+        {{input value=newCourseName placeholder="Enter course name" maxlength=30}}
+        {{input value=newCoursePoints placeholder="Enter course points" type="number" max=30 min=1}}
+        <button {{action 'submitCourse'}}>Add</button>
+    </fieldset>
 </div>
 
 <div class="small-6 columns">

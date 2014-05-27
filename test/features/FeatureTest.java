@@ -122,10 +122,7 @@ public class FeatureTest extends WithServer {
 		List<Course> courses = Course.find.where()
 				.eq("name", "Figuring out Web Servers").findList();
 		assertThat(courses.size()).isGreaterThan(0);
-		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
-				success);
-		assertThat(response.findPath(message).textValue())
-				.containsIgnoringCase(courseAddedSuccessMessage);
+		assertThat(response.equals(request)).isTrue();
 	}
 
 	@Test
@@ -145,9 +142,8 @@ public class FeatureTest extends WithServer {
 				.findList();
 
 		assertThat(courses.size()).isEqualTo(0);
-		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
-				fail);
-		assertThat(response.findPath(message).get(0).textValue())
+		assertThat(
+				response.findPath("errors").findPath("name").get(0).textValue())
 				.containsIgnoringCase(courseNameTooLongMessage);
 	}
 
