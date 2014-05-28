@@ -1,2 +1,34 @@
 @import "settings";
 @import "foundation";
+
+.top-bar {
+  margin: 0 0 em-calc(20) 0;
+}
+
+.no-margin {
+  margin: 0
+}
+
+@media #{$medium-up} {
+  .right-panel {
+    position: fixed;
+  }
+}
+
+@media #{$large-up} {
+  .right-panel {
+    right: 25%;
+    width: 25%;
+  }
+}
+
+@media #{$medium-only} {
+  .right-panel {
+    right: 1%;
+    width: 50%;
+  }
+}
+
+.margin-top {
+  margin: em-calc(10) 0 0 0
+}

@@ -1,19 +1,42 @@
 <div class="small-6 columns">
     <h1>Courses</h1>
-    <ul class="no-bullet">
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Points</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
         {{#each}}
-            <li>{{#link-to 'course' this}}{{name}}{{/link-to}}, points: {{points}}</li>
+            <tr>
+                <td>{{name}}</td>
+                <td>{{points}}</td>
+                <td>
+                    {{#link-to 'course' this tagName='button' classNames='tiny no-margin radius'}}More info{{/link-to}}
+                    <button {{action deleteCourse this}} class="alert tiny no-margin radius">Delete</button>
+                </td>
+            </tr>
         {{/each}}
-    </ul>
-
-    <fieldset>
-        <legend>Add a new Course</legend>
-        {{input value=newCourseName placeholder="Enter course name" maxlength=30}}
-        {{input value=newCoursePoints placeholder="Enter course points" type="number" max=30 min=1}}
-        <button {{action 'submitCourse'}}>Add</button>
-    </fieldset>
+        </tbody>
+    </table>
 </div>
 
-<div class="small-6 columns">
-    {{outlet}}
+<div class="small-6 columns right-panel">
+    <div class="row panel radius">
+        {{outlet}}
+    </div>
+
+    <div class="row">
+        {{view CourseManager.CourseForm}}
+    </div>
+
+    <div class="row panel radius">
+        <h3>Statistics</h3>
+        <ul class="no-bullet">
+            <li>Number of Courses: {{numberOfCourses}}</li>
+            <li>Number of Points: {{numberOfPoints}}</li>
+        </ul>
+    </div>
 </div>

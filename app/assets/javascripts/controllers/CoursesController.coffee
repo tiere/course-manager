@@ -1,15 +1,25 @@
 CourseManager.CoursesController = Ember.ArrayController.extend
+  numberOfCourses: ( ->
+    @get('length')
+  ).property('@each')
+
+  numberOfPoints: ( ->
+    sum = 0
+    @forEach (course) ->
+      sum += course.get('points')
+    sum
+  ).property('@each.points')
   actions:
     submitCourse: ->
       name = this.get('newCourseName')
       points = this.get('newCoursePoints')
 
-      if name? && name.length > 0 && name.length <=30 && points? && points > 0 && points <= 30
-        course = this.store.createRecord 'course',
-          name: name
-          points: points
+      course = this.store.createRecord 'course',
+        name: name
+        points: points
+      course.save()
+      @set('newCourseName', '')
+      @set('newCoursePoints', '')
 
-        course.save()
-      else
-        unless $('#errorPanel').length > 0
-          $("fieldset").before("<div id='errorPanel' class='panel callout'>Error, name and points are required</div>")
+    deleteCourse: (course) ->
+      course.destroyRecord()

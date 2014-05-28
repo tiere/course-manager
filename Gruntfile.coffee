@@ -24,6 +24,7 @@ module.exports = (grunt) ->
     coffee:
       options:
         join: true
+        bare: true
       compile:
         files:
           'public/app.js': 'app/assets/**/*.coffee'

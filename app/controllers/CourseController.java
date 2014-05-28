@@ -2,23 +2,16 @@ package controllers;
 
 import static helpers.HelperMethodsAndVariables.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
 
 import models.Course;
-import play.libs.Json;
 import play.data.Form;
-import play.data.validation.*;
+import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class CourseController extends Controller {
 
@@ -46,10 +39,8 @@ public class CourseController extends Controller {
 		Course course = courseForm.bind(
 				request().body().asJson().findPath("course")).get();
 		course.save();
-		ObjectNode responseCourse = Json.newObject();
-		responseCourse.put("name", course.name);
-		responseCourse.put("points", course.points);
-		response.put("course", responseCourse);
+
+		response.put("course", Json.toJson(course));
 		return ok(response);
 	}
 
@@ -81,8 +72,6 @@ public class CourseController extends Controller {
 			return notFound(response);
 		} else {
 			course.delete();
-			response.put(status, success);
-			response.put(message, deleteSuccessMessage(id));
 			return ok(response);
 		}
 
@@ -99,8 +88,8 @@ public class CourseController extends Controller {
 			return notFound(response);
 		}
 
-		Form<Course> courseForm = Form.form(Course.class).bindFromRequest(
-				request());
+		Form<Course> courseForm = Form.form(Course.class).bind(
+				request().body().asJson().findPath("course"));
 
 		if (courseForm.hasErrors()) {
 			response.put(status, fail);
@@ -108,15 +97,15 @@ public class CourseController extends Controller {
 			return forbidden(response);
 		}
 
-		Course newCourse = courseForm.bindFromRequest(request()).get();
+		Course newCourse = courseForm.bind(
+				request().body().asJson().findPath("course")).get();
 
 		course.name = newCourse.name;
 		course.points = newCourse.points;
 
 		course.save();
 
-		response.put(status, success);
-		response.put(message, courseUpdatedSuccessMessage);
+		response.put("course", Json.toJson(course));
 
 		return ok(response);
 	}

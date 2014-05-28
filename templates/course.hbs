@@ -1,3 +1,17 @@
-<h2>{{name}}</h2>
-
-<h3>Points: {{points}}</h3>
+{{#if isEditing}}
+    <ul class="no-bullet">
+        <li><label>Name{{input value=name}}</label></li>
+        <li><label>Points{{input value=points}}</label></li>
+        <li>
+            <button class="margin-top radius small" {{action 'update'}}>Update</button>
+        </li>
+    </ul>
+{{else}}
+    <ul class="no-bullet no-margin">
+        <li>Name: {{name}}</li>
+        <li>Points: {{points}}</li>
+        <li>
+            <button class="margin-top radius small" {{action 'edit'}}>Edit</button>
+        </li>
+    </ul>
+{{/if}}

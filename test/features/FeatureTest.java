@@ -87,10 +87,7 @@ public class FeatureTest extends WithServer {
 					.delete().get(timeout).asJson();
 
 			assertThat(Course.find.byId(course.id)).isNull();
-			assertThat(response.findPath(status).textValue())
-					.containsIgnoringCase(success);
-			assertThat(response.findPath(message).textValue())
-					.containsIgnoringCase(deleteSuccessMessage(course.id));
+			assertThat(response.toString()).isEqualToIgnoringCase("{}");
 		}
 	}
 
@@ -109,36 +106,34 @@ public class FeatureTest extends WithServer {
 	// POST /courses
 	@Test
 	public void testAddingNewCourseWorks() {
-		ObjectNode newCourse = Json.newObject();
-		newCourse.put("name", "Figuring out Web Servers");
-		newCourse.put("points", 6);
+		Course newCourse = new Course("Figuring out Web Servers", 6);
 
 		ObjectNode request = Json.newObject();
-		request.put("course", newCourse);
+		request.put("course", Json.toJson(newCourse));
 
 		JsonNode response = WS.url(String.format("%s/courses", host))
 				.post(request).get(timeout).asJson();
 
-		List<Course> courses = Course.find.where()
-				.eq("name", "Figuring out Web Servers").findList();
+		List<Course> courses = Course.find.where().eq("name", newCourse.name)
+				.findList();
 		assertThat(courses.size()).isGreaterThan(0);
-		assertThat(response.equals(request)).isTrue();
+		assertThat(response.findPath("name").textValue())
+				.isEqualToIgnoringCase(newCourse.name);
+		assertThat(response.findPath("points").asInt()).isEqualTo(
+				newCourse.points);
 	}
 
 	@Test
 	public void testTryingToAddCourseWithTooLongNameIsHandled() {
-		String tooLongName = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-		ObjectNode newCourse = Json.newObject();
-		newCourse.put("name", tooLongName);
-		newCourse.put("points", 6);
+		Course newCourse = new Course("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 6);
 
 		ObjectNode request = Json.newObject();
-		request.put("course", newCourse);
+		request.put("course", Json.toJson(newCourse));
 
 		JsonNode response = WS.url(String.format("%s/courses", host))
 				.post(request).get(timeout).asJson();
 
-		List<Course> courses = Course.find.where().eq("name", tooLongName)
+		List<Course> courses = Course.find.where().eq("name", newCourse.name)
 				.findList();
 
 		assertThat(courses.size()).isEqualTo(0);
@@ -150,31 +145,33 @@ public class FeatureTest extends WithServer {
 	// PUT /courses/1
 	@Test
 	public void testUpdatingCourseWorks() {
-		ObjectNode updatedCourse = Json.newObject();
-		updatedCourse.put("name", "Fun with Java");
-		updatedCourse.put("points", 8);
+		Course updatedCourse = new Course("Fun with Java", 8);
+
+		ObjectNode request = Json.newObject();
+		request.put("course", Json.toJson(updatedCourse));
 
 		JsonNode response = WS
 				.url(String.format("%s/courses/%s", host, testCourses.get(0).id))
-				.put(updatedCourse).get(timeout).asJson();
+				.put(request).get(timeout).asJson();
 
 		assertThat(Course.find.byId(testCourses.get(0).id).name)
 				.isEqualToIgnoringCase("Fun with Java");
-		assertThat(response.findPath(status).textValue()).containsIgnoringCase(
-				success);
-		assertThat(response.findPath(message).textValue())
-				.containsIgnoringCase(courseUpdatedSuccessMessage);
+		assertThat(response.findPath("course").findPath("name").textValue())
+				.isEqualToIgnoringCase(updatedCourse.name);
+		assertThat(response.findPath("course").findPath("points").asInt())
+				.isEqualTo(updatedCourse.points);
 	}
 
 	@Test
 	public void testUpdatingWithTooHighPointsIsHandled() {
-		ObjectNode updatedCourse = Json.newObject();
-		updatedCourse.put("name", "Fun with Java");
-		updatedCourse.put("points", 31);
+		Course newCourse = new Course("Fun with Java", 31);
+
+		ObjectNode request = Json.newObject();
+		request.put("course", Json.toJson(newCourse));
 
 		JsonNode response = WS
 				.url(String.format("%s/courses/%s", host, testCourses.get(0).id))
-				.put(updatedCourse).get(timeout).asJson();
+				.put(request).get(timeout).asJson();
 
 		assertThat(Course.find.byId(testCourses.get(0).id).name)
 				.doesNotContain("Fun with Java");
