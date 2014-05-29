@@ -1,20 +1,11 @@
-<form data-abide>
+<form>
     <fieldset>
         <legend>Add a new Course</legend>
-        <div class="name-field">
-            <label {{bind-attr for="view.nameField.elementId"}}>Name
-                {{input value=newCourseName viewName="nameField" required='' pattern='alpha'}}
-            </label>
-            <small class="error">This field is required accepts only letters</small>
-        </div>
+        <label {{bind-attr for="view.nameField.elementId"}}>Name</label>
+        {{input value=newCourseName viewName="nameField" required='' maxlength='30'}}
 
-
-        <div class="points-field">
-            <label {{bind-attr for="view.pointsField.elementId"}}>Points
-                {{input value=newCoursePoints viewName="pointsField" required='' pattern='integer'}}
-            </label>
-            <small class="error">This field is required and accepts only numbers</small>
-        </div>
+        <label {{bind-attr for="view.pointsField.elementId"}}>Points</label>
+        {{input value=newCoursePoints viewName="pointsField" required='' type='number' min='1' max='30'}}
 
         <input class="button radius no-margin expand-small" type="submit" value="Add"/>
     </fieldset>

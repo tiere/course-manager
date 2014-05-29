@@ -23,3 +23,4 @@ CourseManager.CoursesController = Ember.ArrayController.extend
 
     deleteCourse: (course) ->
       course.destroyRecord()
+      @transitionToRoute 'courses'
