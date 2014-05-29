@@ -1,6 +1,10 @@
-<div class="small-6 columns">
-    <h1>Courses</h1>
-    <table>
+<div class="row">
+    <div class="small-12 columns">
+        <h1 class="centered-on-small">Courses</h1>
+    </div>
+</div>
+<div class="small-12 medium-6 columns no-padding">
+    <table class="course-table">
         <thead>
         <tr>
             <th>Name</th>
@@ -11,11 +15,11 @@
         <tbody>
         {{#each}}
             <tr>
-                <td>{{name}}</td>
+                <td>{{#link-to 'course' this}}{{name}}{{/link-to}}</td>
                 <td>{{points}}</td>
                 <td>
-                    {{#link-to 'course' this tagName='button' classNames='tiny no-margin radius'}}More info{{/link-to}}
-                    <button {{action deleteCourse this}} class="alert tiny no-margin radius">Delete</button>
+
+                    <button {{action deleteCourse this}} class="alert tiny no-margin radius expand delete-button">Delete</button>
                 </td>
             </tr>
         {{/each}}
@@ -23,7 +27,7 @@
     </table>
 </div>
 
-<div class="small-6 columns right-panel">
+<div class="small-12 medium-6 columns right-panel">
     <div class="row panel radius">
         {{outlet}}
     </div>
@@ -32,7 +36,7 @@
         {{view CourseManager.CourseForm}}
     </div>
 
-    <div class="row panel radius">
+    <div class="row panel radius margin-bottom-small">
         <h3>Statistics</h3>
         <ul class="no-bullet">
             <li>Number of Courses: {{numberOfCourses}}</li>

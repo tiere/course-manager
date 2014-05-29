@@ -1,34 +1,53 @@
 @import "settings";
 @import "foundation";
 
-.top-bar {
-  margin: 0 0 em-calc(20) 0;
-}
-
 .no-margin {
   margin: 0
 }
 
-@media #{$medium-up} {
-  .right-panel {
-    position: fixed;
+@media #{$small-only} {
+  .centered-on-small {
+    text-align: center;
   }
-}
 
-@media #{$large-up} {
-  .right-panel {
-    right: 25%;
-    width: 25%;
+  .margin-bottom-small {
+    margin-bottom: rem-calc(20) !important;
   }
-}
 
-@media #{$medium-only} {
-  .right-panel {
-    right: 1%;
-    width: 50%;
+  .expand-small {
+    padding-right: 0;
+    padding-left: 0;
+    width: 100%;
   }
 }
 
 .margin-top {
   margin: em-calc(10) 0 0 0
+}
+
+.block-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.course-table {
+  width: 100%;
+  border-radius: 3px;
+}
+
+.right-panel {
+  padding-left: rem-calc(20);
+}
+
+fieldset {
+  border-radius: 3px;
+}
+
+.delete-button {
+  min-width: rem-calc(60);
 }

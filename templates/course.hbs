@@ -3,7 +3,7 @@
         <li><label>Name{{input value=name}}</label></li>
         <li><label>Points{{input value=points}}</label></li>
         <li>
-            <button class="margin-top radius small" {{action 'update'}}>Update</button>
+            <button class="margin-top radius small expand-small" {{action 'update'}}>Update</button>
         </li>
     </ul>
 {{else}}
@@ -11,7 +11,7 @@
         <li>Name: {{name}}</li>
         <li>Points: {{points}}</li>
         <li>
-            <button class="margin-top radius small" {{action 'edit'}}>Edit</button>
+            <button class="margin-top radius small expand-small" {{action 'edit'}}>Edit</button>
         </li>
     </ul>
 {{/if}}
