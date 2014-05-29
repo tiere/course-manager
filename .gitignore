@@ -14,7 +14,6 @@ dist
 /RUNNING_PID
 /.settings
 /*.log
-/data
 
 # Bower and grunt stuff
 /bower_components
